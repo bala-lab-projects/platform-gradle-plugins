@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/projects/jdk/21/)
 [![Gradle](https://img.shields.io/badge/Gradle-8.14-blue.svg)](https://gradle.org)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.7-brightgreen.svg)](https://spring.io/projects/spring-boot)
 
 Reusable Gradle convention plugins that enforce best practices, standardize build configurations, and provide production-ready defaults for Java and Spring Boot projects.
 
@@ -20,7 +20,7 @@ These plugins eliminate boilerplate build configuration and enforce consistent s
 - **JaCoCo code coverage** with comprehensive reporting
 - **Lombok** for reducing boilerplate
 - **MapStruct** for type-safe object mapping
-- **Spring Boot 3.4** with dependency management
+- **Spring Boot** with dependency management
 - **Strict dependency resolution** (fails on conflicts)
 - **Comprehensive testing setup** (JUnit 5, MockK, Spring Test)
 
@@ -72,7 +72,7 @@ dependencies {
 - Lombok support
 - Google Java Style checking
 - JaCoCo code coverage
-- Spring Boot 3.4.1
+- Spring Boot
 - MapStruct mapping
 - Comprehensive test setup
 - Strict dependency management
@@ -100,11 +100,6 @@ plugins {
 }
 ```
 
-**Versions:**
-- Lombok: `1.18.36`
-- Checkstyle: `10.20.2`
-- JaCoCo: `0.8.12`
-
 ---
 
 ### **Plugin 2: `io.github.platform.spring-test-conventions`**
@@ -124,10 +119,6 @@ plugins {
     id("io.github.platform.spring-test-conventions")
 }
 ```
-
-**Versions:**
-- Spring Boot: `3.4.1`
-- MockK: `1.13.14`
 
 ---
 
@@ -149,12 +140,6 @@ plugins {
     id("io.github.platform.spring-conventions")
 }
 ```
-
-**Versions:**
-- Spring Boot: `3.4.1`
-- Jackson: `2.18.2`
-- MapStruct: `1.6.3`
-- Spring Dependency Management: `1.1.7`
 
 ---
 

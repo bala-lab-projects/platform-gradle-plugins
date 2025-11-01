@@ -14,32 +14,31 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 /**
  * Convention plugin that provides base Java configuration for all projects.
  *
- * <p>This plugin establishes foundational build standards including
- * <ul>
- *   <li>Java 21 toolchain configuration</li>
- *   <li>Lombok support for reducing boilerplate code</li>
- *   <li>Google Java Style Guide enforcement via Checkstyle</li>
- *   <li>JaCoCo code coverage reporting (XML, HTML, CSV)</li>
- *   <li>JUnit Platform for modern testing</li>
- *   <li>Standard repository configuration</li>
- * </ul>
+ * This plugin establishes foundational build standards including:
+ * - Java 21 toolchain configuration
+ * - Lombok support for reducing boilerplate code
+ * - Google Java Style Guide enforcement via Checkstyle
+ * - JaCoCo code coverage reporting (XML, HTML, CSV)
+ * - JUnit Platform for modern testing
+ * - Standard repository configuration
  *
- * <p><b>Usage:</b>
- * <pre>
+ * **Usage: **
+ * ```
  * plugins {
  *     id("io.github.platform.java-conventions")
  * }
- * </pre>
+ * ```
  *
- * </p>
+ * **Configured Dependencies: **
+ * Dependency versions are managed in `gradle.properties` at the project root.
+ * This ensures a single source of truth for all version management.
+ *
+ * Key dependencies:
+ * - Lombok for annotation processing
+ * - Checkstyle for Google Java Style enforcement
+ * - JaCoCo for code coverage analysis
  */
 class JavaConventionsPlugin : Plugin<Project> {
-
-    companion object {
-        private const val LOMBOK_VERSION = "1.18.36"
-        private const val CHECKSTYLE_VERSION = "10.20.2"
-        private const val JACOCO_VERSION = "0.8.12"
-    }
 
     override fun apply(project: Project) {
         with(project) {
@@ -79,22 +78,26 @@ class JavaConventionsPlugin : Plugin<Project> {
 
     /** Adds Lombok dependencies for both main and test source sets. */
     private fun Project.configureLombok() {
+        val lombokVersion = getVersionProperty("lombokVersion")
+
         dependencies {
-            add("compileOnly", "org.projectlombok:lombok:$LOMBOK_VERSION")
-            add("annotationProcessor", "org.projectlombok:lombok:$LOMBOK_VERSION")
-            add("testCompileOnly", "org.projectlombok:lombok:$LOMBOK_VERSION")
-            add("testAnnotationProcessor", "org.projectlombok:lombok:$LOMBOK_VERSION")
+            add("compileOnly", "org.projectlombok:lombok:$lombokVersion")
+            add("annotationProcessor", "org.projectlombok:lombok:$lombokVersion")
+            add("testCompileOnly", "org.projectlombok:lombok:$lombokVersion")
+            add("testAnnotationProcessor", "org.projectlombok:lombok:$lombokVersion")
         }
     }
 
     /** Configures Checkstyle with Google Java Style Guide and strict enforcement. */
     private fun Project.configureCheckstyle() {
+        val checkstyleVersion = getVersionProperty("checkstyleVersion")
+
         extensions.configure<CheckstyleExtension> {
-            toolVersion = CHECKSTYLE_VERSION
+            toolVersion = checkstyleVersion
 
             // Enforce Google Java Style Guide
             config = resources.text.fromUri(
-                "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${CHECKSTYLE_VERSION}/src/main/resources/google_checks.xml"
+                "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyleVersion}/src/main/resources/google_checks.xml"
             )
 
             // Strict enforcement - fail on any violation
@@ -116,8 +119,10 @@ class JavaConventionsPlugin : Plugin<Project> {
 
     /** Configures JaCoCo code coverage with XML, HTML, and CSV reports. */
     private fun Project.configureJacoco() {
+        val jacocoVersion = getVersionProperty("jacocoVersion")
+
         extensions.configure<JacocoPluginExtension> {
-            toolVersion = JACOCO_VERSION
+            toolVersion = jacocoVersion
         }
 
         tasks.named<JacocoReport>("jacocoTestReport") {
@@ -129,7 +134,6 @@ class JavaConventionsPlugin : Plugin<Project> {
                 csv.required.set(true)
             }
 
-            // Configure coverage thresholds (optional - can be overridden in projects)
             doLast {
                 logger.lifecycle("Code coverage report generated: ${reports.html.outputLocation.get()}/index.html")
             }
@@ -144,7 +148,7 @@ class JavaConventionsPlugin : Plugin<Project> {
             // Run tests with parallel execution
             maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
 
-            // Always generate coverage report after tests
+            // Always generate a coverage report after tests
             finalizedBy(tasks.named("jacocoTestReport"))
 
             // Configure test logging
@@ -154,5 +158,17 @@ class JavaConventionsPlugin : Plugin<Project> {
                 showStandardStreams = false
             }
         }
+    }
+
+    /**
+     * Retrieves a version property from gradle.properties.
+     * Throws an exception with a helpful message if the property is not found.
+     */
+    private fun Project.getVersionProperty(propertyName: String): String {
+        return findProperty(propertyName) as String?
+            ?: throw IllegalStateException(
+                "Property '$propertyName' not found in gradle.properties. " +
+                        "Please ensure gradle.properties exists in the project root with all required version properties."
+            )
     }
 }

@@ -13,12 +13,16 @@ repositories {
     gradlePluginPortal()
 }
 
-dependencies {
-    // Spring Boot Gradle Plugin - latest stable
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.4.1")
+// Read versions from gradle.properties
+val springBootVersion: String by project
+val dependencyManagementVersion: String by project
 
-    // Spring Dependency Management Plugin - latest stable
-    implementation("io.spring.gradle:dependency-management-plugin:1.1.7")
+dependencies {
+    // Spring Boot Gradle Plugin
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+
+    // Spring Dependency Management Plugin
+    implementation("io.spring.gradle:dependency-management-plugin:$dependencyManagementVersion")
 }
 
 gradlePlugin {
@@ -51,6 +55,7 @@ publishing {
         mavenLocal()
     }
 }
+
 kotlin {
     jvmToolchain(21)
 }
