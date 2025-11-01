@@ -14,7 +14,7 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 /**
  * Convention plugin that provides base Java configuration for all projects.
  *
- * This plugin establishes foundational build standards including:
+ * This plugin establishes foundational build standards including
  * - Java 21 toolchain configuration
  * - Lombok support for reducing boilerplate code
  * - Google Java Style Guide enforcement via Checkstyle
@@ -39,7 +39,6 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
  * - JaCoCo for code coverage analysis
  */
 class JavaConventionsPlugin : Plugin<Project> {
-
     override fun apply(project: Project) {
         with(project) {
             applyPlugins()
@@ -96,9 +95,10 @@ class JavaConventionsPlugin : Plugin<Project> {
             toolVersion = checkstyleVersion
 
             // Enforce Google Java Style Guide
-            config = resources.text.fromUri(
-                "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyleVersion}/src/main/resources/google_checks.xml"
-            )
+            config =
+                resources.text.fromUri(
+                    "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-$checkstyleVersion/src/main/resources/google_checks.xml",
+                )
 
             // Strict enforcement - fail on any violation
             maxWarnings = 0
@@ -164,11 +164,10 @@ class JavaConventionsPlugin : Plugin<Project> {
      * Retrieves a version property from gradle.properties.
      * Throws an exception with a helpful message if the property is not found.
      */
-    private fun Project.getVersionProperty(propertyName: String): String {
-        return findProperty(propertyName) as String?
+    private fun Project.getVersionProperty(propertyName: String): String =
+        findProperty(propertyName) as String?
             ?: throw IllegalStateException(
                 "Property '$propertyName' not found in gradle.properties. " +
-                        "Please ensure gradle.properties exists in the project root with all required version properties."
+                    "Please ensure gradle.properties exists in the project root with all required version properties.",
             )
-    }
 }

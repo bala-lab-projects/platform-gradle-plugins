@@ -282,20 +282,20 @@ configurations.all {
 ```java
 @SpringBootTest
 class OrderServiceTest {
-    
+
     @Autowired
     private OrderService orderService;
-    
+
     @Test
     void shouldCreateOrder() {
         // Given
         OrderRequest request = OrderRequest.builder()
             .customerId("CUST-123")
             .build();
-        
+
         // When
         Order order = orderService.createOrder(request);
-        
+
         // Then
         assertThat(order.getId()).isNotNull();
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CREATED);
@@ -313,11 +313,11 @@ MapStruct is automatically configured for type-safe object mapping between domai
 ```java
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-    
+
     OrderResponse toResponse(Order order);
-    
+
     Order toDomain(OrderRequest request);
-    
+
     @Mapping(target = "id", ignore = true)
     void updateOrderFromRequest(OrderRequest request, @MappingTarget Order order);
 }
@@ -417,7 +417,7 @@ MIT License - see [LICENSE](LICENSE)
 
 ## Author
 
-**Balamurugan Elangovan**  
+**Balamurugan Elangovan**
 Principal Software Engineer | Platform Engineering
 
 [GitHub](https://github.com/bala-lab-projects) | [LinkedIn](https://www.linkedin.com/in/balamurugan-elangovan-53791985/) | mail.bala0224@gmail.com

@@ -44,7 +44,6 @@ import org.gradle.kotlin.dsl.dependencies
  * This ensures reproducible builds and prevents unexpected behavior from version mismatches.
  */
 class SpringConventionsPlugin : Plugin<Project> {
-
     override fun apply(project: Project) {
         with(project) {
             applyRequiredPlugins()
@@ -103,11 +102,10 @@ class SpringConventionsPlugin : Plugin<Project> {
      * Retrieves a version property from gradle.properties.
      * Throws an exception with a helpful message if the property is not found.
      */
-    private fun Project.getVersionProperty(propertyName: String): String {
-        return findProperty(propertyName) as String?
+    private fun Project.getVersionProperty(propertyName: String): String =
+        findProperty(propertyName) as String?
             ?: throw IllegalStateException(
                 "Property '$propertyName' not found in gradle.properties. " +
-                        "Please ensure gradle.properties exists in the project root with all required version properties."
+                    "Please ensure gradle.properties exists in the project root with all required version properties.",
             )
-    }
 }
