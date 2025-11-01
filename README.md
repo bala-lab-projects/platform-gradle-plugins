@@ -31,7 +31,7 @@ These plugins eliminate boilerplate build configuration and enforce consistent s
 ### **1. Publish to Maven Local**
 
 ```bash
-git clone https://github.com/bala-lab-commerce/platform-gradle-plugins.git
+git clone https://github.com/bala-lab-projects/platform-gradle-plugins.git
 cd platform-gradle-plugins
 
 # Build and publish
@@ -435,7 +435,7 @@ MIT License - see [LICENSE](LICENSE)
 **Balamurugan Elangovan**  
 Principal Software Engineer | Platform Engineering
 
-[GitHub](https://github.com/bala-lab-commerce) | [LinkedIn](https://www.linkedin.com/in/balamurugan-elangovan-53791985/) | mail.bala0224@gmail.com
+[GitHub](https://github.com/bala-lab-projects) | [LinkedIn](https://www.linkedin.com/in/balamurugan-elangovan-53791985/) | mail.bala0224@gmail.com
 
 ---
 
