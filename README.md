@@ -240,7 +240,7 @@ io.github.platform.spring-webflux-conventions
 
 This plugin enforces **consistent code formatting** via Spotless with **google-java-format** for Java and **ktlint** for Kotlin.
 
-**Java Formatting (google-java-format 1.32.0):**
+**Java Formatting (google-java-format 1.31.0):**
 - Google Java Format style
 - Automatic removal of unused imports
 - Proper import ordering
@@ -346,7 +346,7 @@ mapstructVersion=1.6.3
 
 # Code Quality
 spotlessVersion=8.0.0
-googleJavaFormatVersion=1.32.0
+googleJavaFormatVersion=1.31.0
 ktlintVersion=1.7.1
 jacocoVersion=0.8.14
 

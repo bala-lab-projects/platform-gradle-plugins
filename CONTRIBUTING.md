@@ -77,7 +77,7 @@ This document outlines the process and guidelines for contributing to this proje
 
 This project uses **Spotless** for automatic code formatting:
 
-**Java Formatting (google-java-format 1.32.0):**
+**Java Formatting (google-java-format 1.31.0):**
 - Google Java Format style
 - Automatic removal of unused imports
 - Proper import ordering

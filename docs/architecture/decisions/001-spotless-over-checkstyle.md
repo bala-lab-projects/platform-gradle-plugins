@@ -48,7 +48,7 @@ We chose **Spotless** with `google-java-format` for Java and `ktlint` for Kotlin
 ### Java Formatting
 ```kotlin
 java {
-    googleJavaFormat("1.32.0")
+    googleJavaFormat("1.31.0")
     removeUnusedImports()
     importOrder()
     trimTrailingWhitespace()
