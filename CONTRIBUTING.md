@@ -75,13 +75,37 @@ This document outlines the process and guidelines for contributing to this proje
 
 ### Code Style
 
-- **Kotlin**: We use ktlint 1.5.0 for Kotlin formatting. The pre-commit hooks will automatically format your code.
-- **Line Length**: No strict limit (ktlint max-line-length rule disabled for flexibility)
-- **Wildcard Imports**: Allowed (ktlint no-wildcard-imports rule disabled)
-- **Indentation**: 4 spaces for Kotlin/Java, 2 spaces for YAML
-- **Line Endings**: LF (Unix-style)
+This project uses **Spotless** for automatic code formatting:
 
-All style rules are configured in `.editorconfig`.
+**Java Formatting (google-java-format 1.32.0):**
+- Google Java Format style
+- Automatic removal of unused imports
+- Proper import ordering
+- Trailing whitespace removal
+- Files end with newline
+
+**Kotlin Formatting (ktlint 1.7.1):**
+- 4-space indentation
+- Max line length: 150 characters
+- Wildcard imports allowed
+- Trailing commas allowed
+- Automatic removal of unused imports
+- Line Endings: LF (Unix-style)
+
+All style rules are configured in `.editorconfig` and enforced via Spotless.
+
+**Format your code:**
+```bash
+# Check formatting issues
+./gradlew spotlessCheck
+
+# Auto-fix all formatting issues
+./gradlew spotlessApply
+
+# Or use Make commands
+make format-all        # Format all files
+make format-diff       # Format only changed files
+```
 
 ### Commit Messages
 
@@ -135,9 +159,19 @@ Pre-commit hooks run automatically before each commit to ensure code quality and
 ```bash
 # Run all hooks on all files
 pre-commit run --all-files
+make format-all  # Shortcut
+
+# Run hooks on changed files only
+pre-commit run
+make format-diff  # Shortcut
 
 # Run specific hook
 pre-commit run trailing-whitespace --all-files
+pre-commit run ktlint --all-files
+
+# Run Spotless formatting (for Java/Kotlin in plugins)
+./gradlew spotlessCheck  # Check formatting
+./gradlew spotlessApply  # Auto-fix formatting
 ```
 
 ## Plugin Development

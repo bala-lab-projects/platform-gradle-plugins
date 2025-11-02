@@ -16,7 +16,8 @@ Reusable Gradle convention plugins that enforce best practices, standardize buil
 These plugins eliminate boilerplate build configuration and enforce consistent standards across projects by providing:
 
 - **Java 21** toolchain configuration
-- **Google Java Style Guide** enforcement via Checkstyle
+- **Code formatting** via Spotless (google-java-format for Java, ktlint for Kotlin)
+- **Automatic removal of unused imports** for both Java and Kotlin
 - **JaCoCo code coverage** with comprehensive reporting
 - **Lombok** for reducing boilerplate
 - **MapStruct** for type-safe object mapping
@@ -73,7 +74,8 @@ dependencies {
 **That's it!** You now have:
 - Java 21 toolchain
 - Lombok support
-- Google Java Style checking
+- Code formatting with Spotless (google-java-format + ktlint)
+- Automatic unused imports removal
 - JaCoCo code coverage
 - Spring Boot with Web (MVC)
 - MapStruct mapping
@@ -86,12 +88,13 @@ dependencies {
 
 ### **Plugin 1: `io.github.platform.java-conventions`**
 
-Foundation plugin that provides base Java configuration.
+Foundation plugin that provides base Java and Kotlin configuration.
 
 **What it configures:**
 - ✅ Java 21 toolchain
 - ✅ Lombok (compile + annotation processing)
-- ✅ Google Java Style Guide via Checkstyle
+- ✅ Spotless code formatting (google-java-format for Java, ktlint for Kotlin)
+- ✅ Automatic removal of unused imports
 - ✅ JaCoCo code coverage (XML + HTML + CSV)
 - ✅ JUnit Platform for testing
 - ✅ Maven Central + Maven Local repositories
@@ -209,7 +212,7 @@ io.github.platform.spring-web-conventions
             │
             ├──> io.github.platform.java-conventions
             │       ├─> java-library
-            │       ├─> checkstyle (Google Java Style)
+            │       ├─> spotless (google-java-format + ktlint)
             │       ├─> jacoco
             │       ├─> Java 21 toolchain
             │       ├─> Lombok
@@ -233,33 +236,37 @@ io.github.platform.spring-webflux-conventions
 
 ---
 
-## Code Quality: Google Java Style
+## Code Quality: Spotless Formatting
 
-This plugin enforces the **Google Java Style Guide** via Checkstyle with **zero tolerance** for violations.
+This plugin enforces **consistent code formatting** via Spotless with **google-java-format** for Java and **ktlint** for Kotlin.
 
-**Key rules enforced:**
-- 2-space indentation
-- No wildcard imports
-- Consistent naming conventions
-- Proper Javadoc formatting
-- Line length limits (100 characters)
-- Proper whitespace usage
+**Java Formatting (google-java-format 1.32.0):**
+- Google Java Format style
+- Automatic removal of unused imports
+- Proper import ordering
+- Trailing whitespace removal
+- Files end with newline
 
-**Configuration:**
-```kotlin
-checkstyle {
-    toolVersion = "10.20.2"
-    config = resources.text.fromUri(
-        "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-10.20.2/src/main/resources/google_checks.xml"
-    )
-    maxWarnings = 0  // Fail on any warning
-    maxErrors = 0    // Fail on any error
-}
+**Kotlin Formatting (ktlint 1.7.1):**
+- 4-space indentation
+- Max line length: 150 characters
+- Wildcard imports allowed
+- Trailing commas allowed
+- Automatic removal of unused imports
+
+**Check formatting:**
+```bash
+./gradlew spotlessCheck
 ```
 
-**Run checkstyle:**
+**Auto-fix formatting:**
 ```bash
-./gradlew check
+./gradlew spotlessApply
+```
+
+**Integration with build:**
+```bash
+./gradlew build  # Automatically runs spotlessCheck
 ```
 
 ---
@@ -338,7 +345,9 @@ jacksonVersion=2.19.2
 mapstructVersion=1.6.3
 
 # Code Quality
-checkstyleVersion=10.20.2
+spotlessVersion=8.0.0
+googleJavaFormatVersion=1.32.0
+ktlintVersion=1.7.1
 jacocoVersion=0.8.14
 
 # Testing
@@ -491,6 +500,12 @@ dependencies {
 # Run tests
 ./gradlew test
 
+# Check code formatting
+./gradlew spotlessCheck
+
+# Auto-fix code formatting
+./gradlew spotlessApply
+
 # Clean build artifacts
 ./gradlew clean
 
@@ -499,6 +514,12 @@ dependencies {
 
 # Check dependency versions
 make check-versions
+
+# Run pre-commit hooks on all files
+make format-all
+
+# Run pre-commit hooks on changed files only
+make format-diff
 ```
 
 ---

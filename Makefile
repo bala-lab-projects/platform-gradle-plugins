@@ -1,13 +1,23 @@
-.PHONY: help build test clean publish-local check-versions setup-hooks
+.PHONY: help build test clean publish-local check-versions setup-hooks format-all format-diff format-check spotless-check spotless-apply
 
 help:
 	@echo "Platform Gradle Plugins - Available Commands"
 	@echo "=============================================="
 	@echo ""
+	@echo "Build & Test:"
 	@echo "  build           - Build the plugins"
 	@echo "  test            - Run tests"
 	@echo "  clean           - Clean build artifacts"
 	@echo "  publish-local   - Publish to Maven Local"
+	@echo ""
+	@echo "Code Quality:"
+	@echo "  spotless-check  - Check code formatting (Java/Kotlin via Spotless)"
+	@echo "  spotless-apply  - Auto-fix code formatting (Java/Kotlin via Spotless)"
+	@echo "  format-all      - Run pre-commit hooks on all files"
+	@echo "  format-diff     - Run pre-commit hooks on changed files only"
+	@echo "  format-check    - Check formatting without fixing"
+	@echo ""
+	@echo "Setup & Utilities:"
 	@echo "  check-versions  - Show current dependency versions"
 	@echo "  setup-hooks     - Install pre-commit hooks"
 	@echo ""
@@ -45,6 +55,40 @@ publish-local:
 
 check-versions:
 	@./gradlew -q displayVersions
+
+spotless-check:
+	@echo "🔍 Checking code formatting (Spotless)..."
+	@./gradlew :conventions-plugin:spotlessCheck
+
+spotless-apply:
+	@echo "✨ Auto-fixing code formatting (Spotless)..."
+	@./gradlew :conventions-plugin:spotlessApply
+	@echo "✅ Code formatted successfully!"
+
+format-all:
+	@echo "🎨 Running pre-commit hooks on all files..."
+	@pre-commit run --all-files || { \
+		echo "⚠️  Command not in PATH. Using full path..."; \
+		$$HOME/.local/bin/pre-commit run --all-files; \
+	}
+	@echo ""
+	@echo "✅ All files checked and formatted!"
+
+format-diff:
+	@echo "🎨 Running pre-commit hooks on changed files..."
+	@pre-commit run || { \
+		echo "⚠️  Command not in PATH. Using full path..."; \
+		$$HOME/.local/bin/pre-commit run; \
+	}
+	@echo ""
+	@echo "✅ Changed files checked and formatted!"
+
+format-check:
+	@echo "🔍 Checking formatting (pre-commit hooks)..."
+	@pre-commit run --all-files --show-diff-on-failure || { \
+		echo "⚠️  Command not in PATH. Using full path..."; \
+		$$HOME/.local/bin/pre-commit run --all-files --show-diff-on-failure; \
+	}
 
 setup-hooks:
 	@echo "🔧 Setting up pre-commit hooks..."
@@ -87,4 +131,10 @@ setup-hooks:
 	@echo "  - Kotlin formatting (ktlint)"
 	@echo "  - Commit message linting (conventional commits)"
 	@echo ""
-	@echo "💡 Run 'pre-commit run --all-files' to check all files"
+	@echo "💡 Quick commands:"
+	@echo "   make format-all   - Format all files"
+	@echo "   make format-diff  - Format changed files only"
+	@echo ""
+	@echo "📦 Spotless (Java/Kotlin in plugins):"
+	@echo "   make spotless-check  - Check formatting"
+	@echo "   make spotless-apply  - Auto-fix formatting"

@@ -1,10 +1,9 @@
 package io.github.platform.gradle
 
+import com.diffplug.gradle.spotless.SpotlessExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.plugins.quality.Checkstyle
-import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.*
@@ -12,12 +11,13 @@ import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 /**
- * Convention plugin that provides base Java configuration for all projects.
+ * Convention plugin that provides base Java and Kotlin configuration for all projects.
  *
  * This plugin establishes foundational build standards including
  * - Java 21 toolchain configuration
  * - Lombok support for reducing boilerplate code
- * - Google Java Style Guide enforcement via Checkstyle
+ * - Google Java Format enforcement via Spotless
+ * - Kotlin formatting with ktlint via Spotless
  * - JaCoCo code coverage reporting (XML, HTML, CSV)
  * - JUnit Platform for modern testing
  * - Standard repository configuration
@@ -35,7 +35,8 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
  *
  * Key dependencies:
  * - Lombok for annotation processing
- * - Checkstyle for Google Java Style enforcement
+ * - Spotless with google-java-format for Java formatting
+ * - Spotless with ktlint for Kotlin formatting
  * - JaCoCo for code coverage analysis
  */
 class JavaConventionsPlugin : Plugin<Project> {
@@ -45,16 +46,16 @@ class JavaConventionsPlugin : Plugin<Project> {
             configureJavaToolchain()
             configureRepositories()
             configureLombok()
-            configureCheckstyle()
+            configureSpotless()
             configureJacoco()
             configureTesting()
         }
     }
 
-    /** Applies java-library, checkstyle, and jacoco plugins. */
+    /** Applies java-library, spotless, and jacoco plugins. */
     private fun Project.applyPlugins() {
         pluginManager.apply("java-library")
-        pluginManager.apply("checkstyle")
+        pluginManager.apply("com.diffplug.spotless")
         pluginManager.apply("jacoco")
     }
 
@@ -85,30 +86,52 @@ class JavaConventionsPlugin : Plugin<Project> {
         }
     }
 
-    /** Configures Checkstyle with Google Java Style Guide and strict enforcement. */
-    private fun Project.configureCheckstyle() {
-        extensions.configure<CheckstyleExtension> {
-            toolVersion = GeneratedVersions.CHECKSTYLE
+    /** Configures Spotless with google-java-format for Java and ktlint for Kotlin. */
+    private fun Project.configureSpotless() {
+        extensions.configure<SpotlessExtension> {
+            // Configure Java formatting with google-java-format
+            java {
+                // Use google-java-format
+                googleJavaFormat(GeneratedVersions.GOOGLE_JAVA_FORMAT)
 
-            // Enforce Google Java Style Guide
-            config =
-                resources.text.fromUri(
-                    "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-$toolVersion/src/main/resources/google_checks.xml",
-                )
+                // Target all Java source files
+                target("src/**/*.java")
 
-            // Strict enforcement - fail on any violation
-            maxWarnings = 0
-            maxErrors = 0
+                // Remove unused imports
+                removeUnusedImports()
 
-            // Apply to both main and test source sets
-            isShowViolations = true
-        }
+                // Format imports
+                importOrder()
 
-        // Configure checkstyle tasks
-        tasks.withType<Checkstyle>().configureEach {
-            reports {
-                xml.required.set(true)
-                html.required.set(true)
+                // Trim trailing whitespace
+                trimTrailingWhitespace()
+
+                // Ensure files end with a newline
+                endWithNewline()
+            }
+
+            // Configure Kotlin formatting with ktlint
+            kotlin {
+                // Use ktlint
+                ktlint(GeneratedVersions.KTLINT)
+                    .editorConfigOverride(
+                        mapOf(
+                            "indent_size" to "4",
+                            "max_line_length" to "150",
+                            "ktlint_standard_no-wildcard-imports" to "disabled",
+                            "ij_kotlin_allow_trailing_comma" to "true",
+                            "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
+                        ),
+                    )
+
+                // Target all Kotlin source files
+                target("src/**/*.kt", "**/*.kts")
+
+                // Trim trailing whitespace
+                trimTrailingWhitespace()
+
+                // Ensure files end with a newline
+                endWithNewline()
             }
         }
     }
