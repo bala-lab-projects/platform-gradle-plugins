@@ -21,7 +21,6 @@ ij_kotlin_allow_trailing_comma_on_call_site = true
 # This is normal - your IDE doesn't recognize them, but ktlint does. These warnings can be safely ignored.
 # See: https://pinterest.github.io/ktlint/latest/rules/configuration-ktlint/
 ktlint_standard_max-line-length = disabled
-ktlint_standard_no-wildcard-imports = disabled
 
 [*.{yaml,yml}]
 indent_size = 2

@@ -63,7 +63,6 @@ kotlin {
         .editorConfigOverride(mapOf(
             "indent_size" to "4",
             "max_line_length" to "120",
-            "ktlint_standard_no-wildcard-imports" to "disabled",
             "ij_kotlin_allow_trailing_comma" to "true",
             "ij_kotlin_allow_trailing_comma_on_call_site" to "true"
         ))
@@ -170,7 +169,6 @@ quadrantChart
 [*.{kt,kts}]
 indent_size = 4
 max_line_length = 120
-ktlint_standard_no-wildcard-imports = disabled
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ```

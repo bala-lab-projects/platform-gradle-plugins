@@ -6,7 +6,11 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.withType
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
@@ -133,7 +137,6 @@ class JavaConventionsPlugin : Plugin<Project> {
                         mapOf(
                             "indent_size" to "4",
                             "max_line_length" to "120",
-                            "ktlint_standard_no-wildcard-imports" to "disabled",
                             "ij_kotlin_allow_trailing_comma" to "true",
                             "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
                         ),
